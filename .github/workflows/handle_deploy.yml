@@ -1,0 +1,11 @@
+name: Main Workflow That Calls Pylint
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  call-pylint:
+    uses: ./.github/workflows/pylint.yml
