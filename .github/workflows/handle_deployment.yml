@@ -1,4 +1,4 @@
-name: Main Workflow That Calls Pylint
+name: Handle Deployment
 
 on:
   push:
