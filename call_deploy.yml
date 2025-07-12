@@ -6,4 +6,4 @@ on:
 
 jobs:
   call-reusable:
-    uses: ankps/password_rotator_pipeline/.github/workflows/build.yml@v1
+    uses: ankps/password_rotator_pipeline/.github/workflows/lint.yml@main
