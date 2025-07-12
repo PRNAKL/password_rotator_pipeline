@@ -1,0 +1,9 @@
+name: Call the reusable deploy
+
+on:
+  push:
+    branches: [ "*" ]
+
+jobs:
+  call-reusable:
+    uses: ankps/password_rotator_pipeline/.github/workflows/build.yml@v1
