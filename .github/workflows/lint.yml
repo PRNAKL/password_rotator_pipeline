@@ -1,8 +1,7 @@
 name: Lint with Pylint
 
 on:
-  push:
-    branches: [ "*" ]
+  workflow_call:
 
 jobs:
   pylint:
