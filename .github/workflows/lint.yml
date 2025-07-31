@@ -21,7 +21,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pylint
+          pip install pytest
 
       - name: Run Pylint on all Python files
         run: |
           find . -type f -name "*.py" | xargs pylint
+
+      - name: Run Tests
+        run: |
+          pytest
+
