@@ -25,7 +25,15 @@ jobs:
 
       - name: Run Pylint on all Python files
         run: |
-          find . -type f -name "*.py" | xargs pylint
+          py_files=$(find . -type f -name "*.py")
+          if [ -n "$py_files" ]; then
+            pylint \
+              --init-hook "import sys, os; sys.path.extend([os.path.abspath(os.path.dirname(f)) for f in sys.argv[1:]])" \
+              $py_files
+          else
+            echo "No Python files found."
+          fi
+
 
       - name: Run Tests
         run: |
