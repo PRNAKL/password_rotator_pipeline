@@ -6,3 +6,6 @@ on:
 jobs:
   call-pylint:
     uses: ./.github/workflows/lint.yml
+
+  call-deploy-invoke:
+    uses:
