@@ -1,9 +1,7 @@
 name: Deploy lambda
 
 on:
-  push:
-    branches:
-      - "*"   # runs on all branches
+  workflow_call:
 
 permissions:
   id-token: write
