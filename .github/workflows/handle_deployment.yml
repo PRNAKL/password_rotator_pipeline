@@ -8,4 +8,5 @@ jobs:
     uses: ./.github/workflows/lint.yml
 
   call-deploy-invoke:
-    uses:
+    uses: ./github/workflows/deploy_lambda.yml
+
