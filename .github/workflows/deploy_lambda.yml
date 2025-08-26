@@ -28,6 +28,8 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        env:
+          TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
