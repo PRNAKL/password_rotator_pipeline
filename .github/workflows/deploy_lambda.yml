@@ -27,6 +27,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Debug Secret
+        run: echo "Policy ARN is $TF_VAR_deploy_lambda_permissions"
+        env:
+          TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
+
       - name: Terraform Plan
         env:
           TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
