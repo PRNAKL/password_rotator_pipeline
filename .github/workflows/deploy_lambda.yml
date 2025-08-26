@@ -30,7 +30,7 @@ jobs:
       - name: Terraform Plan
         env:
           TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
-        run: terraform plan -out=tfplan
+        run: terraform plan -lock-timeout=5m -out=tfplan
 
       - name: Terraform Apply
         env:
