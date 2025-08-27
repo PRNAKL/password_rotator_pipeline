@@ -10,6 +10,8 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
 
     steps:
       - name: Checkout repo
@@ -30,27 +32,13 @@ jobs:
       - name: Debug Secret
         run: |
           if [ -z "$TF_VAR_deploy_lambda_permissions" ]; then
-            echo "Secret is EMPTY"
+            echo "❌ Secret is EMPTY"
           else
-            echo "Secret is PRESENT (length: ${#TF_VAR_deploy_lambda_permissions})"
+            echo "✅ Secret is PRESENT (length: ${#TF_VAR_deploy_lambda_permissions})"
           fi
-        env:
-          TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
 
       - name: Terraform Plan
-        env:
-          TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
         run: terraform plan -lock-timeout=5m -out=tfplan
 
       - name: Terraform Apply
-        env:
-          TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
-        run: terraform apply -auto-approve
-
-      - name: Debug secret presence
-        run: |
-          if [ -z "${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}" ]; then
-              echo "❌ Secret is NOT available!"
-              else
-                echo "✅ Secret is available (but value is hidden)."
-              fi
+        run: terraform apply -auto-approve tfplan
