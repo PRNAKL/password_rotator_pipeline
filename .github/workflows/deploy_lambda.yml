@@ -28,7 +28,12 @@ jobs:
         run: terraform init
 
       - name: Debug Secret
-        run: echo "Policy ARN is $TF_VAR_deploy_lambda_permissions"
+        run: |
+          if [ -z "$TF_VAR_deploy_lambda_permissions" ]; then
+            echo "Secret is EMPTY"
+          else
+            echo "Secret is PRESENT (length: ${#TF_VAR_deploy_lambda_permissions})"
+          fi
         env:
           TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
 
