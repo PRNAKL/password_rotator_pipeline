@@ -1,6 +1,9 @@
 name: Deploy lambda
 
 on:
+  push:
+    branches:
+      - *
   workflow_dispatch:
 
 permissions:
