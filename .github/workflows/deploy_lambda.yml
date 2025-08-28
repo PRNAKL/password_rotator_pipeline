@@ -1,0 +1,49 @@
+name: Deploy lambda
+
+on:
+  workflow_call:
+    secrets:
+      DEPLOY_LAMBDA_PERMISSIONS:
+        required: true
+      AWS_LAMBDA_PERMISSIONS:
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using GitHub OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_LAMBDA_PERMISSIONS }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Debug Secret
+        run: |
+          if [ -z "$TF_VAR_deploy_lambda_permissions" ]; then
+            echo "Secret is EMPTY"
+          else
+            echo "Secret is PRESENT (length: ${#TF_VAR_deploy_lambda_permissions})"
+          fi
+
+      - name: Terraform Plan
+        run: terraform plan -lock-timeout=5m -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
