@@ -5,6 +5,8 @@ on:
     secrets:
       DEPLOY_LAMBDA_PERMISSIONS:
         required: true
+      AWS_LAMBDA_PERMISSIONS:
+        required: true
 
 permissions:
   id-token: write
@@ -23,7 +25,7 @@ jobs:
       - name: Configure AWS credentials using GitHub OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::967246349943:role/invoke_lambda_permissions
+          role-to-assume: ${{ secrets.AWS_LAMBDA_PERMISSIONS }}
           aws-region: us-east-1
 
       - name: Setup Terraform

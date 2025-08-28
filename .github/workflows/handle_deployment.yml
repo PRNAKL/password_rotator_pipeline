@@ -13,4 +13,4 @@ jobs:
   call-deploy-invoke:
     uses: ./.github/workflows/deploy_lambda.yml
     secrets:
-      DEPLOY_LAMBDA_PERMISSIONS: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}  # ✅ forward secret to deploy workflow
+      DEPLOY_LAMBDA_PERMISSIONS: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}  # forward secret to deploy workflow
