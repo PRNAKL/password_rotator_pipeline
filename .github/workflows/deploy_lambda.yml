@@ -2,6 +2,9 @@ name: Deploy lambda
 
 on:
   workflow_call:
+    secrets:
+      DEPLOY_LAMBDA_PERMISSIONS:
+        required: true
 
 permissions:
   id-token: write
