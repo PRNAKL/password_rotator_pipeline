@@ -5,6 +5,9 @@ on:
     secrets:
       DEPLOY_LAMBDA_PERMISSIONS:
         required: true   # declare that this reusable workflow expects this secret
+      AWS_LAMBDA_PERMISSIONS:
+        required: true
+
 
 jobs:
   call-pylint:
