@@ -3,11 +3,16 @@ name: Handle Deployment
 on:
   workflow_call:
     secrets:
-      DEPLOY_LAMBDA_PERMISSIONS:
-        required: true   # declare that this reusable workflow expects this secret
       AWS_LAMBDA_PERMISSIONS:
-        required: true
-
+        required: true   # OIDC role for GitHub Actions to assume
+      DEPLOY_LAMBDA_PERMISSIONS:
+        required: true   # Policy ARN to attach to Lambda exec role
+      EVENTBRIDGE_SCHEDULER:
+        required: true   # Scheduler ARN or ARN pattern
+      LAMBDA_EXEC_ROLE_V3:
+        required: true   # Lambda execution role ARN
+      LAMBDA_FUNCTION_ARN:
+        required: true   # Lambda function ARN
 
 jobs:
   call-pylint:
@@ -16,5 +21,8 @@ jobs:
   call-deploy-invoke:
     uses: ./.github/workflows/deploy_lambda.yml
     secrets:
-      DEPLOY_LAMBDA_PERMISSIONS: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}  # forward secret to deploy workflow
       AWS_LAMBDA_PERMISSIONS:  ${{ secrets.AWS_LAMBDA_PERMISSIONS }}
+      DEPLOY_LAMBDA_PERMISSIONS: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
+      EVENTBRIDGE_SCHEDULER: ${{ secrets.EVENTBRIDGE_SCHEDULER }}
+      LAMBDA_EXEC_ROLE_V3: ${{ secrets.LAMBDA_EXEC_ROLE_V3 }}
+      LAMBDA_FUNCTION_ARN: ${{ secrets.LAMBDA_FUNCTION_ARN }}

@@ -1,22 +1,22 @@
-name: Deploy lambda
+name: Deploy Lambda
 
 on:
   workflow_call:
     secrets:
-      DEPLOY_LAMBDA_PERMISSIONS:
-        required: true
       AWS_LAMBDA_PERMISSIONS:
         required: true
-
-permissions:
-  id-token: write
-  contents: read
+      DEPLOY_LAMBDA_PERMISSIONS:
+        required: true
+      EVENTBRIDGE_SCHEDULER:
+        required: true
+      LAMBDA_EXEC_ROLE_V3:
+        required: true
+      LAMBDA_FUNCTION_ARN:
+        required: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
 
     steps:
       - name: Checkout repo
@@ -28,22 +28,24 @@ jobs:
           role-to-assume: ${{ secrets.AWS_LAMBDA_PERMISSIONS }}
           aws-region: us-east-1
 
-      - name: Setup Terraform
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Debug Secret
-        run: |
-          if [ -z "$TF_VAR_deploy_lambda_permissions" ]; then
-            echo "Secret is EMPTY"
-          else
-            echo "Secret is PRESENT (length: ${#TF_VAR_deploy_lambda_permissions})"
-          fi
-
       - name: Terraform Plan
         run: terraform plan -lock-timeout=5m -out=tfplan
+        env:
+          TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
+          TF_VAR_eventbridge_scheduler: ${{ secrets.EVENTBRIDGE_SCHEDULER }}
+          TF_VAR_lambda_exec_role_v3: ${{ secrets.LAMBDA_EXEC_ROLE_V3 }}
+          TF_VAR_lambda_function_arn: ${{ secrets.LAMBDA_FUNCTION_ARN }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
+        env:
+          TF_VAR_deploy_lambda_permissions: ${{ secrets.DEPLOY_LAMBDA_PERMISSIONS }}
+          TF_VAR_eventbridge_scheduler: ${{ secrets.EVENTBRIDGE_SCHEDULER }}
+          TF_VAR_lambda_exec_role_v3: ${{ secrets.LAMBDA_EXEC_ROLE_V3 }}
+          TF_VAR_lambda_function_arn: ${{ secrets.LAMBDA_FUNCTION_ARN }}
